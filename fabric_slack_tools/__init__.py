@@ -22,7 +22,7 @@
 
 from __future__ import absolute_import
 import functools
-import urllib2
+import requests
 import datetime
 import getpass
 import os
@@ -69,10 +69,11 @@ def send_slack_message(text, channel=None, username=None, icon_emoji=None, web_h
     if icon_emoji:
         data["icon_emoji"] = icon_emoji
 
-    req = urllib2.Request(web_hook_url)
-    req.add_header("Content-Type", "application/json")
-    urllib2.urlopen(req, json.dumps(data))
-
+    response = requests.post(
+        web_hook_url, data=json.dumps(data),
+        headers={'Content-Type': 'application/json'}
+    )
+    
 def announce_deploy(project, channel=None, username=None, icon_emoji=None, web_hook_url=None):
     """
     announce_deploy - a decorator to announces a new deploy of the specificed project start,
